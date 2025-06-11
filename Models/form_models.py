@@ -9,11 +9,11 @@ class CuerpoInhumadoResponse(BaseModel):
     documentoIdentidad: str
     numeroProtocoloNecropsia: str
     causaMuerte: str
-    fechaNacimiento: str
-    fechaDefuncion: str
-    fechaIngreso: str
-    fechaInhumacion: str
-    fechaExhumacion: str
+    fechaNacimiento: date
+    fechaDefuncion: date
+    fechaIngreso: date
+    fechaInhumacion: date
+    fechaExhumacion: date | None = Field(default=None, description="Fecha de exhumación, puede ser None si no aplica")
     funcionarioReceptor: str
     cargoFuncionario: str
     autoridadRemitente: str

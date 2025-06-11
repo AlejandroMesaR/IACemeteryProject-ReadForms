@@ -66,6 +66,25 @@ def process_form_image(image_path: str) -> dict:
         fecha_exhumacion = clean_numeric_text(resultados.get("fecha_exhumacion", ""), "fecha_exhumacion")
         documento_identidad = clean_numeric_text(resultados.get("documento_identidad", ""), "documento_identidad")
         
+        # Validar fechas
+        print(f'fecha_nacimiento: {fecha_nacimiento}, fecha_defuncion: {fecha_defuncion}, fecha_ingreso: {fecha_ingreso}, fecha_inhumacion: {fecha_inhumacion}, fecha_exhumacion: {fecha_exhumacion}')
+        try:
+            if fecha_nacimiento:
+                fecha_nacimiento = datetime.strptime(fecha_nacimiento, '%d-%m-%Y').date()
+            if fecha_defuncion:
+                fecha_defuncion = datetime.strptime(fecha_defuncion, '%d-%m-%Y').date()
+            if fecha_ingreso:
+                fecha_ingreso = datetime.strptime(fecha_ingreso, '%d-%m-%Y').date()
+            if fecha_inhumacion:
+                fecha_inhumacion = datetime.strptime(fecha_inhumacion, '%d-%m-%Y').date()
+            if fecha_exhumacion and fecha_exhumacion.strip():  # Verificar que no esté vacío
+                fecha_exhumacion = datetime.strptime(fecha_exhumacion, '%d-%m-%Y').date()
+            else:
+                fecha_exhumacion = None  # Asignar una fecha mínima válida
+        except ValueError as e:
+            logging.error(f"Error al parsear fechas: {e}")
+            return {"error": f"Error al parsear fechas: {str(e)}"}
+        
         mapped_resultados = {
             "nombre": resultados.get("nombres", ""),
             "apellido": resultados.get("primer_apellido", "") + " " + resultados.get("segundo_apellido", ""),
